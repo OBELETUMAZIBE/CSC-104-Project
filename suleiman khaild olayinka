@@ -1,0 +1,26 @@
+# Streamlit App Logic
+st.title("Simple Banking App")
+
+# Store account in session_state to persist data
+if 'account' not in st.session_state:
+    st.session_state.account = None
+
+account_type = st.selectbox("Choose Account Type", ["Savings", "Current"])
+name = st.text_input("Enter Account Holder Name")
+
+# Show an info message before account is created
+if st.session_state.account is None:
+    st.info("Please create an account to begin.")
+
+if st.button("Create Account"):
+    if name:
+        if account_type == "Savings":
+            st.session_state.account = SavingsAccount(name)
+        else:
+            st.session_state.account = CurrentAccount(name)
+        st.success(f"✅ Account created for {name} ({account_type})")
+    else:
+        st.error("⚠️ Please enter a name to create an account.")
+
+if st.session_state.account:
+    st.subheader(f"👋 Welcome, {st.session_state.account.name}")
